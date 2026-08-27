@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Allawan_Wireframe</title>
+  <style>
+    :root {
+      --wire-bg: #f4f4f4;
+      --wire-border: #4a4a4a;
+      --wire-text: #222222;
+      --wire-muted: #777777;
+      --wire-highlight: #dcdcdc;
+    }
+
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* Mobile Frame Constraint (Consistent Size across 4 Screens) */
+    .phone-container {
+      width: 360px;
+      height: 640px;
+      background-color: var(--wire-bg);
+      border: 3px solid var(--wire-border);
+      border-radius: 24px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .status-bar {
+      height: 24px;
+      background: var(--wire-highlight);
+      border-bottom: 2px solid var(--wire-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 11px;
+      color: var(--wire-text);
+    }
+
+    .screen {
+      display: none;
+      flex: 1;
+      padding: 16px;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    h2 {
+      font-size: 18px;
+      text-transform: uppercase;
+      margin: 0 0 8px 0;
+      border-bottom: 2px dashed var(--wire-border);
+      padding-bottom: 4px;
+    }
+
+    p, li {
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--wire-text);
+    }
+
+    .box-placeholder {
+      border: 2px dashed var(--wire-border);
+      background: #ffffff;
+      padding: 12px;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    .btn {
+      background: #ffffff;
+      border: 2px solid var(--wire-border);
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      width: 100%;
+      box-shadow: 2px 2px 0px var(--wire-border);
+      margin-top: 8px;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0px var(--wire-border);
+    }
+
+    /* Task 2 Interactive Mechanics */
+    .drag-zone {
+      display: flex;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .chip {
+      border: 2px solid var(--wire-border);
+      background: #fff;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .drop-target {
+      border: 2px solid var(--wire-border);
+      min-height: 40px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    /* Modal Dialog for Constructive Error Feedback */
+    .modal-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: #fff;
+      border: 3px solid var(--wire-border);
+      padding: 16px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="phone-container">
+  <div class="status-bar">
+    <span>JAVA 101 LO-FI</span>
+    <span>9:41 AM</span>
+  </div>
+
+  <!-- SCREEN 1: READINESS / MEANING BRIDGE -->
+  <div id="screen-1" class="screen active">
+    <div>
+      <h2>Screen 1: Warm-Up</h2>
+      <p><strong>Scenario:</strong> Imagine you are building a smart vending machine. How does a computer display a message to the buyer?</p>
+      <div class="box-placeholder">
+        [ Visual Placeholder: Vending Machine Screen displaying "Hello, Drinker!" ]
+      </div>
+      <p>In Java, we use <code>System.out.println()</code> to print text to the screen!</p>
+    </div>
+    <button class="btn" onclick="goToScreen(2)">I'm Ready: Let's Code &gt;</button>
+  </div>
+
+  <!-- SCREEN 2: ACTIVE LEARNING / DEWEY -->
+  <div id="screen-2" class="screen">
+    <div>
+      <h2>Screen 2: Interactive</h2>
+      <p>Assemble the command to print <em>"Hello World"</em>:</p>
+      
+      <div class="drop-target" id="drop-area">
+        [ Select code blocks below ]
+      </div>
+
+      <div class="drag-zone">
+        <div class="chip" onclick="selectBlock('print()')">print()</div>
+        <div class="chip" onclick="selectBlock('System.out.println')">System.out.println</div>
+        <div class="chip" onclick="selectBlock('(&quot;Hello World&quot;);')">("Hello World");</div>
+      </div>
+    </div>
+    <div>
+      <button class="btn" onclick="checkAnswer()">Submit Code</button>
+      <button class="btn" style="background:#ddd;" onclick="resetBlocks()">Reset</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: KNOWLEDGE CHECK -->
+  <div id="screen-3" class="screen">
+    <div>
+      <h2>Screen 3: Concept Check</h2>
+      <p>Which statement correctly prints text with a new line in Java?</p>
+      <button class="btn" onclick="triggerError()">A) Console.Write("Hello");</button>
+      <button class="btn" onclick="triggerError()">B) print.out.System("Hello");</button>
+      <button class="btn" onclick="goToScreen(4)">C) System.out.println("Hello");</button>
+    </div>
+    <p style="font-size:11px; color:#555;">Select an answer to test error handling or progression.</p>
+  </div>
+
+  <!-- SCREEN 4: CONCLUSION / REFLECTION -->
+  <div id="screen-4" class="screen">
+    <div>
+      <h2>Screen 4: Module Complete</h2>
+      <div class="box-placeholder">
+        [ Graphic Placeholder: Badge / Achievement Icon ]
+      </div>
+      <p><strong>Great Job!</strong> You learned:</p>
+      <ul>
+        <li>Java output syntax (System.out.println)</li>
+        <li>Basic command assembly</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="goToScreen(1)">Restart Module</button>
+  </div>
+
+  <!-- CONSTRUCTIVE ERROR POPUP (Thorndike's Law of Effect / Psychological Safety) -->
+  <div id="error-modal" class="modal-overlay">
+    <div class="modal-box">
+      <p><strong>Not Quite, But Good Try!</strong></p>
+      <p id="error-msg" style="font-size: 12px;">Remember: Java requires exact casing and order. Syntax: <code>System.out.println(...)</code></p>
+      <button class="btn" onclick="closeModal()">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let selected = [];
+
+  function goToScreen(num) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(`screen-${num}`).classList.add('active');
+  }
+
+  function selectBlock(val) {
+    selected.push(val);
+    document.getElementById('drop-area').innerText = selected.join(" ");
+  }
+
+  function resetBlocks() {
+    selected = [];
+    document.getElementById('drop-area').innerText = "[ Select code blocks below ]";
+  }
+
+  function checkAnswer() {
+    if(selected.join(" ") === 'System.out.println ("Hello World");') {
+      goToScreen(3);
+    } else {
+      showModal("Close! Remember that 'System.out.println' must come before the quote parameter.");
+    }
+  }
+
+  function triggerError() {
+    showModal("Not quite! C# uses Console.Write. In Java, we use System.out.println(). Give it another attempt!");
+  }
+
+  function showModal(msg) {
+    document.getElementById('error-msg').innerText = msg;
+    document.getElementById('error-modal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('error-modal').style.display = 'none';
+  }
+</script>
+</body>
+</html>
